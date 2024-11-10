@@ -260,7 +260,7 @@ void algoritmoGenetico(DatosArchivo *datos) {
             }
         }
 
-        // Mutación
+        // Mutacion
         printf("\nMUTACION\n");
         for (int i = 0; i < numCromosomas; i++) {
             for (int j = 0; j < datos->numObjetos; j++) {
@@ -269,7 +269,7 @@ void algoritmoGenetico(DatosArchivo *datos) {
                     printf("Mutación en cromosoma %d, gen %d\n", i, j);
                 }
             }
-            // Imprimir el cromosoma después de la mutación
+            // Imprimir el cromosoma después de la mutacion
             printf("Cromosoma[%d] después de mutación = [ ", i);
             for (int j = 0; j < datos->numObjetos; j++) {
                 printf("%d ", nuevaPoblacion[i][j]);
@@ -277,7 +277,7 @@ void algoritmoGenetico(DatosArchivo *datos) {
             printf("]\n");
         }
 
-        // Reemplazo de la población
+        // Reemplazo de la poblacion
         for (int i = 0; i < numCromosomas; i++) {
             free(poblacion[i]);
             poblacion[i] = nuevaPoblacion[i];
@@ -295,7 +295,6 @@ void algoritmoGenetico(DatosArchivo *datos) {
         getchar();
     }
 
-    // Liberar memoria
     for (int i = 0; i < numCromosomas; i++) {
         free(poblacion[i]);
     }

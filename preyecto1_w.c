@@ -183,7 +183,7 @@ void algoritmoGenetico(DatosArchivo *datos) {
     float *pesos = (float *)malloc(numCromosomas * sizeof(float));
     float *aptitudes = (float *)malloc(numCromosomas * sizeof(float));
 
-    // Inicializar la población
+    // Inicializar la poblacion
     for (int i = 0; i < numCromosomas; i++) {
         printf("Cromosoma[%d] = [ ", i);
         for (int j = 0; j < datos->numObjetos; j++) {
@@ -200,7 +200,7 @@ void algoritmoGenetico(DatosArchivo *datos) {
 
         float aptitudTotal = 0.0;
 
-        // Evaluación de la población
+        // Evaluación de la poblacion
         for (int i = 0; i < numCromosomas; i++) {
             pesos[i] = 0;
             for (int j = 0; j < datos->numObjetos; j++) {
@@ -222,7 +222,7 @@ void algoritmoGenetico(DatosArchivo *datos) {
         printf("\nF = %.6f\n", aptitudTotal);
         printf("Generacion No. : %d\n", gen + 1);
 
-        // Selección por ruleta
+        // Seleccion por ruleta
         int **nuevaPoblacion = (int **)malloc(numCromosomas * sizeof(int *));
         for (int i = 0; i < numCromosomas; i++) {
             nuevaPoblacion[i] = (int *)malloc(datos->numObjetos * sizeof(int));
@@ -250,17 +250,17 @@ void algoritmoGenetico(DatosArchivo *datos) {
             }
         }
 
-        // Mutación
+        // Mutacion
         printf("\nMUTACION\n");
         for (int i = 0; i < numCromosomas; i++) {
             for (int j = 0; j < datos->numObjetos; j++) {
                 if ((float)rand() / RAND_MAX < datos->probMutacion) {
                     nuevaPoblacion[i][j] = !nuevaPoblacion[i][j];
-                    printf("Mutación en cromosoma %d, gen %d\n", i, j);
+                    printf("Mutacion en cromosoma %d, gen %d\n", i, j);
                 }
             }
-            // Imprimir el cromosoma después de la mutación
-            printf("Cromosoma[%d] después de mutación = [ ", i);
+            // Imprimir el cromosoma después de la mutacion
+            printf("Cromosoma[%d] despues de mutacion = [ ", i);
             for (int j = 0; j < datos->numObjetos; j++) {
                 printf("%d ", nuevaPoblacion[i][j]);
             }
@@ -281,11 +281,10 @@ void algoritmoGenetico(DatosArchivo *datos) {
             printf("p[%d] = %.6f\n", i, probabilidad);
         }
 
-        printf("\nPresiona Enter para continuar a la siguiente generación...");
+        printf("\nPresiona Enter para continuar a la siguiente generacion...");
         getchar();
     }
 
-    // Liberar memoria
     for (int i = 0; i < numCromosomas; i++) {
         free(poblacion[i]);
     }
