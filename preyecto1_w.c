@@ -1,9 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 #include <time.h>
 
+#ifdef _WIN32
+    #include <windows.h>
+    #define SLEEP(ms) Sleep(ms)
+#else
+    #include <unistd.h>
+    #define SLEEP(ms) usleep((ms) * 1000)
+#endif
 
 typedef struct {
     float probCruza;
@@ -20,7 +26,7 @@ void limpiarPantalla();
 void pantallaInicial();
 DatosArchivo* procesarArchivoDat(const char* nombreArchivo);
 void liberarDatos(DatosArchivo *datos);
-
+void algoritmoGenetico(DatosArchivo *datos);
 
 void imprimeLogo() {
     printf("\n");
@@ -60,7 +66,6 @@ void pantallaInicial() {
 
 int main() {
     int opcion;
-    char enter;
     
     limpiarPantalla();
     pantallaInicial();
@@ -76,7 +81,7 @@ int main() {
         while(getchar() != '\n'); 
         
         switch(opcion) {
-            case 1:
+            case 1: {
                 limpiarPantalla();
                 imprimeLogo();
                 char nombreArchivo[100];
@@ -89,7 +94,7 @@ int main() {
                     liberarDatos(datos);
                 }
                 break;
-                
+            }
             case 2:
                 limpiarPantalla();
                 imprimeLogo();
@@ -97,7 +102,6 @@ int main() {
                 printf("    Presiona Enter para salir...");
                 getchar();
                 break;
-                
             default:
                 printf("\n    Opción no válida. Presiona Enter para continuar...");
                 getchar();
@@ -109,15 +113,12 @@ int main() {
 
 DatosArchivo* procesarArchivoDat(const char* nombreArchivo) {
     FILE *archivo;
-    char linea[256];
     DatosArchivo *datos = malloc(sizeof(DatosArchivo));
     
-    // Asignar memoria
-    datos->areas = malloc(100 * sizeof(float));  // Tamaño inicial
+    datos->areas = malloc(100 * sizeof(float));
     datos->longitudes = malloc(100 * sizeof(float));
     datos->numAreas = 0;
     
-    // Abrir archivo
     archivo = fopen(nombreArchivo, "r");
     if (archivo == NULL) {
         printf("Fichero: %s -> Error de Apertura!!! (NO ABIERTO)\n", nombreArchivo);
@@ -128,29 +129,20 @@ DatosArchivo* procesarArchivoDat(const char* nombreArchivo) {
         return NULL;
     }
     
-    printf("\nAPERTURA DE ARCHIVO PARA CARGAR DATOS\n");
-    printf("Proporciona el nombre del archivo con extension\n");
-    printf("Fichero: %s -> Apertura Exitosa!!! (ABIERTO)\n", nombreArchivo);
-    printf("\nLos Datos leidos fueron los siguientes\n\n");
-
     fscanf(archivo, "%f", &datos->probCruza);
     fscanf(archivo, "%f", &datos->probMutacion);
     fscanf(archivo, "%d", &datos->numObjetos);
     fscanf(archivo, "%f", &datos->capacidadMaxima);
 
-    //convertimos en prob los porcentajes
-    datos->probCruza = datos->probCruza / 100;
-    datos->probMutacion = datos->probMutacion / 100;
+    datos->probCruza /= 100;
+    datos->probMutacion /= 100;
 
-    // Imprimimos
     printf("Probabilidad de Cruza = %.2f\n", datos->probCruza);
     printf("Probabilidad de Mutacion = %.2f\n", datos->probMutacion);
     printf("Num de objetos = %d\n", datos->numObjetos);
     printf("Capacidad maxima = %.2f\n\n", datos->capacidadMaxima);
 
-    // Imprimir tabla
     printf("Areas\tLongitud\n");
-
     float area, longitud;
     while (fscanf(archivo, "%f %f", &area, &longitud) == 2) {
         datos->areas[datos->numAreas] = area;
@@ -160,8 +152,6 @@ DatosArchivo* procesarArchivoDat(const char* nombreArchivo) {
     }
 
     fclose(archivo);
-    while(getchar() != '\n');
-    
     printf("    Presiona Enter para continuar...");
     getchar();
     return datos;
